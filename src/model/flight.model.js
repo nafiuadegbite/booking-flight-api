@@ -4,9 +4,10 @@ let latestFlightId = 1;
 
 const flight = {
   flightId: latestFlightId,
+  title: "flight to canada",
   time: "1pm",
   price: 26000,
-  date: new Date("June 26, 2022"),
+  date: "26-06-2022",
 };
 
 flights.set(flight.flightId, flight);
@@ -24,9 +25,20 @@ const addNewFlight = (flight) => {
 };
 
 const getFlightById = (flightId) => {
-  const flightById = flights.get(flightId);
+  const requestedFlight = flights.get(flightId);
 
-  return flightById;
+  return requestedFlight;
 };
 
-module.exports = { getAllFlights, addNewFlight, getFlightById };
+const deleteFlightById = (flightId) => {
+  const deletedFlight = flights.delete(flightId);
+
+  return deletedFlight;
+};
+
+module.exports = {
+  getAllFlights,
+  addNewFlight,
+  getFlightById,
+  deleteFlightById,
+};
