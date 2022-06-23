@@ -3,10 +3,12 @@ const {
   addNewFlight,
   getFlightById,
   deleteFlightById,
+  existsFlightId,
+  updateFlightById,
 } = require("../../model/flight.model");
 
 const httpGetAllFlights = (req, res) => {
-  res.status(200).json(getAllFlights());
+  return res.status(200).json(getAllFlights());
 };
 
 const httpAddNewFlight = (req, res) => {
@@ -18,19 +20,54 @@ const httpAddNewFlight = (req, res) => {
   }
 
   addNewFlight(flight);
-  res.status(201).json(flight);
+  return res.status(201).json(flight);
 };
 
 const httpGetFlightById = (req, res) => {
   const flightId = Number(req.params.id);
+  if (!existsFlightId(flightId)) {
+    return res.status(404).json({
+      error: "Flight details not found",
+    });
+  }
 
-  res.status(200).json(getFlightById(flightId));
+  return res.status(200).json(getFlightById(flightId));
 };
 
 const httpDeleteFlightById = (req, res) => {
   const flightId = Number(req.params.id);
 
-  res.status(200).json(deleteFlightById(flightId));
+  if (!existsFlightId(flightId)) {
+    return res.status(404).json({
+      error: "Flight not found",
+    });
+  }
+
+  deleteFlightById(flightId);
+  return res.status(200).json({
+    message: "Flight deleted successfully",
+  });
+};
+
+const httpUpdateFlightById = (req, res) => {
+  const flightId = Number(req.params.id);
+
+  if (!existsFlightId(flightId)) {
+    return res.status(404).json({
+      error: "Flight details not found",
+    });
+  }
+
+  const flight = req.body;
+
+  const updatedDetails = updateFlightById(
+    flightId,
+    flight.title,
+    flight.time,
+    flight.price,
+    flight.date
+  );
+  return res.status(200).json(updatedDetails);
 };
 
 module.exports = {
@@ -38,4 +75,5 @@ module.exports = {
   httpAddNewFlight,
   httpGetFlightById,
   httpDeleteFlightById,
+  httpUpdateFlightById,
 };

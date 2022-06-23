@@ -12,6 +12,10 @@ const flight = {
 
 flights.set(flight.flightId, flight);
 
+const existsFlightId = (flightId) => {
+  return flights.has(flightId);
+};
+
 const getAllFlights = () => {
   return Array.from(flights.values());
 };
@@ -36,9 +40,27 @@ const deleteFlightById = (flightId) => {
   return deletedFlight;
 };
 
+const updateFlightById = (flightId, title, time, price, date) => {
+  if (title) {
+    flights.get(flightId).title = title;
+  } else if (time) {
+    flights.get(flightId).time = time;
+  } else if (price) {
+    flights.get(flightId).price = price;
+  } else if (date) {
+    flights.get(flightId).date = date;
+  } else {
+    return { message: `Please input a valid detail` };
+  }
+
+  return flights.get(flightId);
+};
+
 module.exports = {
   getAllFlights,
   addNewFlight,
   getFlightById,
   deleteFlightById,
+  existsFlightId,
+  updateFlightById,
 };
